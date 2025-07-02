@@ -1,0 +1,3 @@
+@echo off
+echo Iniciando SQL to Spark Converter Web App...
+python app.py

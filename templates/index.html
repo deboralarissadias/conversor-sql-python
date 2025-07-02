@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL to Spark Converter</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/sql.min.js"></script>
+</head>
+<body>
+    <h1>SQL to Spark Converter</h1>
+
+    <nav class="main-nav">
+        <ul>
+            <li><a href="#converter">Converter</a></li>
+            <li><a href="#pyspark-lib">PySpark</a></li>
+            <li><a href="#spark-sql-lib">Spark SQL</a></li>
+            <li><a href="#sqlparse-lib">SQLParse</a></li>
+            <li><a href="#presentation">Presentation</a></li>
+        </ul>
+    </nav>
+
+    <div class="container" style="display: flex;">
+    </div>
+    
+    <div id="converter" class="container input-section">
+        <h2>Input SQL Query</h2>
+        
+        <div class="tabs">
+            <div class="tab active" data-target="text-input">Text Input</div>
+            <div class="tab" data-target="file-input">File Upload</div>
+        </div>
+        
+        <div id="text-input" class="input-container active">
+            <textarea id="sql-textarea" placeholder="Enter your SQL query here...">
+SELECT
+    f.nome AS funcionario,
+    f.cargo,
+    d.nome AS departamento,
+    COALESCE(AVG(av.nota), 0) AS media_nota,
+    COALESCE(SUM(a.horas_semanais), 0) AS total_horas
+FROM funcionarios f
+LEFT JOIN departamentos d ON f.departamento_id = d.id
+LEFT JOIN avaliacoes av ON f.id = av.funcionario_id
+LEFT JOIN alocacoes a ON f.id = a.funcionario_id
+WHERE f.ativo = TRUE
+GROUP BY f.id, f.nome, f.cargo, d.nome
+ORDER BY media_nota DESC;
+            </textarea>
+        </div>
+        
+        <div id="file-input" class="input-container">
+            <div class="file-upload">
+                <input type="file" id="sql-file" accept=".sql">
+                <p>Select a .sql file to upload</p>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <button id="convert-btn">Convert</button>
+        </div>
+        
+        <div id="error-message" class="error"></div>
+        <div id="loader" class="loader"></div>
+    </div>
+    
+    <div id="output-section" class="container output-section" style="display: none;">
+        <h2>Conversion Results</h2>
+        
+        <div class="tabs">
+            <div class="output-tab active" data-target="original-container">Original SQL</div>
+            <div class="output-tab" data-target="pyspark-container">PySpark</div>
+            <div class="output-tab" data-target="sparksql-container">SparkSQL</div>
+        </div>
+        
+        <div id="original-container" class="output-container active">
+            <h3>Original SQL Query</h3>
+            <pre><code class="language-sql" id="original-sql"></code></pre>
+        </div>
+        
+        <div id="pyspark-container" class="output-container">
+            <h3>PySpark DataFrame API Code</h3>
+            <pre><code class="language-python" id="pyspark-output"></code></pre>
+        </div>
+        
+        <div id="sparksql-container" class="output-container">
+            <h3>SparkSQL Code</h3>
+            <pre><code class="language-python" id="sparksql-output"></code></pre>
+        </div>
+    </div>
+    
+    <section id="pyspark-lib" class="container library-section">
+        <h2>PySpark Library</h2>
+        <p>PySpark is the Python API for Apache Spark, an open-source, distributed computing system used for big data processing and analytics. It provides a simple way to parallelize computations across clusters.</p>
+        <p>Key features:</p>
+        <ul>
+            <li>DataFrame API for structured data processing</li>
+            <li>SQL interface for querying data</li>
+            <li>Machine learning library (MLlib)</li>
+        </ul>
+        <a href="https://spark.apache.org/docs/latest/api/python/" target="_blank">Official Documentation</a>
+    </section>
+
+    <section id="spark-sql-lib" class="container library-section">
+        <h2>Spark SQL</h2>
+        <p>Spark SQL is a Spark module for structured data processing. It provides a programming interface for Spark to operate on structured datasets and SQL queries.</p>
+        <p>Key features:</p>
+        <ul>
+            <li>SQL interface for querying data</li>
+            <li>Optimized execution through the Catalyst optimizer</li>
+            <li>Integration with Hive and other data sources</li>
+        </ul>
+        <a href="https://spark.apache.org/docs/latest/sql-programming-guide.html" target="_blank">Official Documentation</a>
+    </section>
+
+    <section id="sqlparse-lib" class="container library-section">
+        <h2>SQLParse</h2>
+        <p>SQLParse is a non-validating SQL parser for Python. It provides support for parsing, splitting and formatting SQL statements.</p>
+        <p>Key features:</p>
+        <ul>
+            <li>Parse SQL statements into parse trees</li>
+            <li>Format SQL statements</li>
+            <li>Split SQL statements</li>
+        </ul>
+        <a href="https://sqlparse.readthedocs.io/" target="_blank">Official Documentation</a>
+    </section>
+
+    <section class="container" style="height: 800px;" id="presentation">
+        <h2>Presentation</h2>
+        <iframe style="height: 90%; width: 100%;" src="../static/sqlconverter.pdf" frameborder="0"></iframe>
+    </section>
+    
+    <script src="/static/script.js"></script>
+</body>
+</html>
